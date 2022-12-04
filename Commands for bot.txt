@@ -1,0 +1,80 @@
+
+  'help' => {
+    name: 'help',
+    description: 'List all available commands.',
+    execute: [Function: execute]
+  },
+  'loop' => {
+    name: 'loop',
+    description: 'Sets loop mode',
+    options: [ [Object] ],
+    execute: [AsyncFunction: execute]
+  },
+  'move' => {
+    name: 'move',
+    description: 'move song position in the queue!',
+    options: [ [Object], [Object] ],
+    execute: [AsyncFunction: execute]
+  },
+  'nowplaying' => {
+    name: 'nowplaying',
+    description: 'Get the song that is currently playing.',
+    execute: [AsyncFunction: execute]
+  },
+  'pause' => {
+    name: 'pause',
+    description: 'Pause current song!',
+    execute: [AsyncFunction: execute]
+  },
+  'play' => {
+    name: 'play',
+    description: 'Play a song in your channel!',
+    options: [ [Object] ],
+    execute: [AsyncFunction: execute]
+  },
+  'playtop' => {
+    name: 'playtop',
+    description: 'Play a song before the next in your channel!',
+    options: [ [Object] ],
+    execute: [AsyncFunction: execute]
+  },
+  'purge' => {
+    name: 'purge',
+    description: 'Delete the last messages in all chats.',
+    options: [ [Object] ],
+    execute: [AsyncFunction: execute]
+  },
+  'queue' => {
+    name: 'queue',
+    description: 'View the queue of current songs!',
+    execute: [AsyncFunction: execute]
+  },
+  'remove' => {
+    name: 'remove',
+    description: 'remove a song from the queue!',
+    options: [ [Object] ],
+    execute: [AsyncFunction: execute]
+  },
+  'resume' => {
+    name: 'resume',
+    description: 'Resume current song!',
+    execute: [AsyncFunction: execute]
+  },
+  'skip' => {
+    name: 'skip',
+    description: 'Skip a song!',
+    execute: [AsyncFunction: execute]
+  },
+  'stop' => {
+    name: 'stop',
+    description: 'Stop all songs in the queue!',
+    execute: [AsyncFunction: execute]
+  },
+  'volume' => {
+    name: 'volume',
+    description: 'Change the volume!',
+    options: [ [Object] ],
+    execute: [AsyncFunction: execute]
+  }
+}
+Ready!
