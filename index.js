@@ -1,10 +1,19 @@
 const fs = require('fs');
+
 const Discord = require('discord.js');
+
 const config = require('./config.json');
+
 const {Player} = require('discord-player');
+
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-const Client = require('./client/Client');
+
+const Client = require('./client/Client').default;
+
 const client = new Client();
+
+const { OpusEncoder } = require('@discordjs/opus');
+
 client.commands = new Discord.Collection();
 
 for (const file of commandFiles) {
@@ -15,6 +24,9 @@ for (const file of commandFiles) {
 console.log(client.commands);
 
 const player = new Player(client);
+const encoder = new OpusEncoder(48000, 2);
+const encoded = encoder.encode(buffer);
+const decoded = encoder.decode(encoded);
 
 player.on('error', (queue, error) => {
   console.log(`[${queue.guild.name}] Error emitted from the queue: ${error.message}`);
