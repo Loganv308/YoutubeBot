@@ -7,7 +7,13 @@ const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('
 const Client = require('./client/Client').default;
 const client = new Client();
 const { OpusEncoder } = require('@discordjs/opus');
-
+const {
+  setDefaultTimeout,
+  BeforeAll,
+  AfterAll,
+  After,
+  Before,
+} = require('cucumber');
 
 let intLoop = null
 let loop = false
