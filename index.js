@@ -260,9 +260,27 @@ function resetInactivityTimer() {
   }, 5 * 60 * 1000);
 }
 
-afterEach(function() {
-  browser.executeScript('window.sessionStorage.clear();');
-  browser.executeScript('window.localStorage.clear();');
+this.After(function(scenario) {
+
+  function getWindowLocation() {
+    return window.location;
+  }
+
+  function clearStorage() {
+    window.sessionStorage.clear();
+    window.localStorage.clear();
+  }
+
+  return browser.executeScript(getWindowLocation).then(function(location) {
+    // NB If no page is loaded in the scneario then calling clearStorage will cause exception
+    // so guard against this by checking hostname (If no page loaded then hostname == '')
+    if (location.hostname.length > 0) {
+      return browser.executeScript(clearStorage);
+    }
+    else {
+      return Promise.resolve();
+    }
+  });
 });
 
 client.login(config.token);
