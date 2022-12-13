@@ -260,4 +260,9 @@ function resetInactivityTimer() {
   }, 5 * 60 * 1000);
 }
 
+afterEach(function() {
+  browser.executeScript('window.sessionStorage.clear();');
+  browser.executeScript('window.localStorage.clear();');
+});
+
 client.login(config.token);
