@@ -1,18 +1,13 @@
 const fs = require('fs');
 const { Stream } = require('./stream')
 const Discord = require('discord.js');
-
 const config = require('./config.json');
-
 const {Player} = require('discord-player');
-
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-
 const Client = require('./client/Client').default;
-
 const client = new Client();
-
 const { OpusEncoder } = require('@discordjs/opus');
+
 
 let intLoop = null
 let loop = false
@@ -23,6 +18,7 @@ const token = process.env.token
 let stream = new Stream(token)
 const url_expression = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
 const url_regex = new RegExp(url_expression)
+const CHANNEL_ID = '696077834732437554';
 
 client.commands = new Discord.Collection();
 
@@ -79,8 +75,21 @@ player.on('queueEnd', queue => {
   queue.metadata.send('✅ | Queue finished!');
 });
 
-client.once('ready', async () => {
-  console.log('Ready!');
+client.once('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+
+  // Join the specified channel
+  const channel = client.channels.cache.get(CHANNEL_ID);
+  if (!channel) {
+    console.error(`Could not find channel with ID ${CHANNEL_ID}`);
+    return;
+  }
+  channel.join();
+});
+
+client.on('message', (message) => {
+  // Reset the inactivity timer whenever there is a message in the channel
+  resetInactivityTimer();
 });
 
 client.once('reconnecting', () => {
@@ -235,5 +244,20 @@ client.on('interactionCreate', async interaction => {
     });
   }
 });
+
+let inactivityTimer;
+
+function resetInactivityTimer() {
+  // Clear any existing timer
+  clearTimeout(inactivityTimer);
+
+  // Set a new timer that will leave the channel after 5 minutes of inactivity
+  inactivityTimer = setTimeout(() => {
+    const channel = client.channels.cache.get(CHANNEL_ID);
+    if (channel) {
+      channel.leave();
+    }
+  }, 5 * 60 * 1000);
+}
 
 client.login(config.token);
