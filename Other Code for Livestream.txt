@@ -1,0 +1,60 @@
+(async () => {
+  const browser = await puppeteer.launch({ headless: false, userDataDir: './data' });
+
+  const webClient = await browser.newPage();
+
+  webClient.goto(`https://discord.com/channels/${config.serverId}`, { waitUntil: 'networkidle0' });
+
+  const voiceChannelSelector = `a[data-list-item-id="channels___${config.voiceChannelID}"]`;
+
+  webClient.waitForSelector(voiceChannelSelector, { timeout: 0 });
+
+  webClient.evaluate(v => document.querySelector(v).click(), voiceChannelSelector);
+
+  client.on('message', message => {
+    if (msg.channel.id !== config.textChannelID)
+      return;
+
+    if (msg.member.voiceChannelID !== config.voiceChannelID)
+        return;
+
+        if (msg.content === '!stop' && player !== null)
+    {
+        // Stop the current video.
+        try {
+            process.kill(player.pid, 'SIGTERM');
+            msg.delete();
+        } catch (e) {}
+
+        return;
+    }
+    if (player !== null)
+        try { process.kill(player.pid, 'SIGINT'); } catch (e) {}
+
+  });
+  
+  webClient.evaluate(() => {
+    const enableVideoButton = document.querySelector('button[aria-label="Turn On Camera"]');
+    const disableVideoButton = document.querySelector('button[aria-label="Turn Off Camera"]');
+
+    if (disableVideoButton !== null)
+        return;
+
+    if (enableVideoButton !== null)
+        return enableVideoButton.click();
+  });
+
+  player.on('close', async (code) => {
+    // A new video is about to start -- keep the camera active.
+    if (code === 2)
+        return;
+
+    // Regular exit or termination -- turn the camera off.
+    webClient.evaluate(() => {
+        const disableVideoButton = document.querySelector('button[aria-label="Turn Off Camera"]');
+
+        if (disableVideoButton !== null)
+            return disableVideoButton.click();
+    });
+  });
+})();
